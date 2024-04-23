@@ -25,64 +25,64 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/info")
+    @GetMapping("/user")
     public String get(Model model, Principal principal) {
         model.addAttribute("user", userRepository.findByName(principal.getName() ).get() );
 
         return "info";
     }
 
-    @GetMapping()
+    @GetMapping("/admin")
     public String start() {
         return "start";
     }
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
     public String getAll(Model model) {
         model.addAttribute("users", userService.getAll() );
         return "all";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/admin/new")
     public String addGet(Model model) {
         model.addAttribute("user", new User() );
 
         return "new";
     }
 
-    @PostMapping("/new")
+    @PostMapping("/admin/new")
     public String addPost(@ModelAttribute("user") User user) {
         user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER") ) );
         userService.add(user);
 
-        return "redirect:/all";
+        return "redirect:/admin/all";
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/admin/edit")
     public String updateUserGet(Model model, @RequestParam(value="id", required = false) Long id){
         model.addAttribute("user", userService.get(id) );
 
         return "edit";
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/admin/edit")
     public String updateUserPost(@ModelAttribute User user, @RequestParam(value="id", required = false) Long id) {
         userService.update(user, id);
-        return "redirect:/all";
+        return "redirect:/admin/all";
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/admin/delete")
     public String deleteGet(Model model, Long id) {
         model.addAttribute("id", id );
 
         return "delete";
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/admin/delete")
     public String deletePost(Long id) {
         userService.delete(id);
 
-        return "redirect:/all";
+        return "redirect:/admin/all";
     }
 
 }

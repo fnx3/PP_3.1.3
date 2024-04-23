@@ -1,7 +1,6 @@
 package preproject.PP_31.handlers;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +13,12 @@ import java.io.IOException;
 public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-      if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN") ) ) {
-          httpServletResponse.sendRedirect("/");
-      } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER") ) ){
-          httpServletResponse.sendRedirect("/info");
-      } else
-          httpServletResponse.sendRedirect("all");
+        // Проверяем какие есть права у пользователя, anyMatch проверяет коллекцию на соот. права и возвр. true
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") ) ) {
+            httpServletResponse.sendRedirect("/admin");
+        } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER") ) ) {
+            httpServletResponse.sendRedirect("/user");
+        }
     }
 
 }
